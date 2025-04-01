@@ -1,12 +1,20 @@
 <?php
-if(isset($_POST['submit']))
-{
-    $name=$_REQUEST['name'];
-    $email=$_REQUEST['email'];
-    $mobile=$_REQUEST['mobile'];
-    echo"name:".$name;
-    echo"Email:".$email;
-    echo"Phone Number:".$mobile;
+include('database.php');
+
+if(isset($_POST['submit'])) {
+    // Secure input to prevent SQL injection
+    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $mobile = mysqli_real_escape_string($conn, $_POST['mobile']);
+
+    // Insert query (removed manual id assignment)
+    $sql = "INSERT INTO `users` (`name`, `email`, `phone`) VALUES ('$name', '$email', '$mobile')";
+
+    if(mysqli_query($conn, $sql)) {
+        echo "<script>alert('Your data was inserted successfully');</script>";
+    } else {
+        echo "<script>alert('Error: " . mysqli_error($conn) . "');</script>";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -14,7 +22,7 @@ if(isset($_POST['submit']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
+    <title>Index</title>
 </head>
 <body>
     <h1>Fill up the form carefully</h1>
